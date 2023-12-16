@@ -1,17 +1,15 @@
-module "vault_mount" {
-  source = "ptonini/mount/vault"
-  version = "~> 1.0.0"
-  path = var.path
-  type = var.type
+resource "vault_mount" "this" {
+  path    = var.path
+  type    = var.type
 }
 
 resource "vault_generic_endpoint" "config" {
-  path = "${module.vault_mount.this.path}/config"
+  path                 = "${vault_mount.this.path}/config"
   ignore_absent_fields = true
-  disable_read = true
+  disable_read         = true
   data_json = jsonencode({
-    app_id = var.app_id
+    app_id   = var.app_id
     org_name = var.org_name
-    prv_key = var.private_key
+    prv_key  = var.private_key
   })
 }
